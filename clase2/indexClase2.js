@@ -1,0 +1,1 @@
+console.log('probando clase 2')
