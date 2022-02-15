@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plantilla basica de vuejs</title>
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+    <div id="app">
+        {{ message }}
+        <input v-model="message">
+        <button v-on:click="reverseMessage">Reverse Message</button>
+        <span v-bind:title="vtexto">
+           {{oracion}}
+          </span>
+          <br>
+          <span v-if="ver">Ahora me ven</span>
+          <ol>
+            <li v-for="remito in remitos">
+              {{ remito.codigo }} {{remito.desc}} {{remito.cliente}}
+            </li>
+          </ol>
+          <br>
+          <input v-model="busqueda">
+          <button v-on:click="buscar">Buscar</button>
+          <button v-on:click="ordenarRemitosPorCliente">Ordenar por cliente</button>
+          <button v-on:click="filtrarMartillo">Filtrar martillo</button>
+          <button v-on:click="enviarDatos">Enviar datos</button>
+
+          <br>
+          <br>
+          <saludar nombre = "Juan"/>
+    </div>
+
+    <script>
+
+            Vue.component('saludar', {
+            props: ['nombre'],                                                     // Props es una idea similar al de los parametros.
+            template: '<p>Hola desde un componente {{nombre}}</p>'                // Esto es lo que se muestra
+            })
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hola Vue!',
+                busqueda: 'ingrese la descripcion',
+                vtexto : 'Algún mensaje de ayuda',
+                oracion: `     Una oración cualquiera.
+                             Para mostrar en el html.`,
+                ver     : false ,                                                           //por defecto lo ponemos en false y no es visible, para cambiarlo ingresamos en consola de chroome app.ver = "true" y ya es visible
+                remitos : [
+                    { codigo : 1, desc: 'PINZAS' , cliente: 12},
+                    { codigo : 2, desc: 'MARTILLO' , cliente: 3},
+                    { codigo : 3, desc: 'MAZA' , cliente: 4}
+                ]
+            },
+            methods: {
+                    reverseMessage: function () {                                            // esta linea puede simplificarse eliminando los : y la palabra function quedando --> reverseMessage() {}
+                         this.message = this.message.split('').reverse().join('')
+                    },
+                    ordenarRemitosPorCliente: function(){
+                         this.remitos = this.remitos.sort((a,b) => a.cliente - b.cliente)
+                                                                                             //app.remitos.sort( ( a, b) => a.codigo - b.codigo)
+                    },
+                    filtrarMartillo () {
+                        this.remitos = this.remitos.filter(x => x.desc == 'MARTILLO')
+                    },
+                    enviarDatos() {
+                        console.log(JSON.stringify(this.remitos))                            //Usando el método stringify() se puede enviar los datos en formato json a una api rest
+                    },
+                    buscar(){
+                        this.remitos = this.remitos.filter(x => x.desc == this.busqueda.toUpperCase())
+                    },
+                    mostrarMensaje(param){
+                        param
+                    }
+
+            }     
+        })
+
+
+
+
+
+        //ordenar los remitos por cliente
+            /*app.remitos.sort((a,b)=>(a.cliente - b.cliente))*/  
+
+        // Filtrar clientes con código 4
+            //app.remitos.filter(param => param.cliente == 4) al hacer esto habria que guardarlo
+            // porque filter devuelve un array
+            //solución
+            //   app.remitos = app.remitos.filter(x => x.cliente == 4)
+
+        //Ejercicio
+        /* Se quiere borrar el remito con descripción martillo
+        //Con FILTER
+        app.remitos = app.remitos.filter(x => x.desc != 'Martillo')        
+        */
+
+        //Otra solución
+        /*app.remitos.splice( app.remitos.findIndex(x => x.desc == 'Martillo'), 1)
+        //el 1er parametro del splice es el indice, el 2do es cuantas veces lo hace
+        */
+
+    </script>
+</body>
+
+</html>
