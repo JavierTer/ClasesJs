@@ -11,15 +11,29 @@
     
         <div id="app">
             <h1 v-bind:style = "color" > {{titulo}} </h1>
-            <br>
+            
             <button v-on:click="cambiarColor" >Cambiar color</button>
            
 
-            <!-- <ol>
-                <li v-for="factura in facturas">
-                  {{ factura.codigoFact }} {{factura.cliente}} {{factura.items}}
-                </li>
-              </ol> -->
+            
+                  <p> Código de factura:  {{ codigoFact }} </p> 
+                  
+                  <p> Número de cliente:  {{cliente}}</p>  
+
+                  <ol>
+                      <li v-for="item in items">
+                          <p>{{item.precio}}</p>
+                          <p>{{item.descripcion}}</p>
+                      </li>
+                  </ol>
+                                    
+                  <button v-on:click = "agregarItem"> Agregar item</button> 
+                  <input v-model="itemAgregado">
+                  <input v-model="precioItem">
+
+                
+
+             
 
             
 
@@ -34,15 +48,27 @@
             data: {
             color: "color: green",
             titulo: 'Sistema de facturación',
-           /*  facturas : [
-                    { codigoFact : 465654654,  cliente: 12, items: [] },
-                    { codigoFact : 865798732,  cliente: 3, items: []},
-                    { codigoFact : 12365498,   cliente: 4, items: []}
-                ]  */
+            codigoFact : 465654654,
+            cliente: 12,
+            items: [{precio: 130, descripcion: 'PINZA'}, 
+                    {precio: 200, descripcion: 'MARTILLO'},
+                    {precio: 150, descripcion: 'DESTORNILLADOR'}
+            ],
+               
+            itemAgregado: "ingrese item",
+            precioItem:   0,
+
              }, 
              methods: {
                  cambiarColor(){
                      this.color = "color: blue;"
+                 }, 
+                 agregarItem(){
+                  /*  let precio = this.precioItem
+                   let item   = this.itemAgregado
+                   let itemAAgregar = {precio, item} */
+                   app.items.push({ precio: this.precioItem,  descripcion: this.itemAgregado.toUpperCase()})
+                   
                  }
              }
 
