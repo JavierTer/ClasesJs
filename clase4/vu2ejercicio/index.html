@@ -26,10 +26,13 @@
                           <p>{{item.descripcion}}</p>
                       </li>
                   </ol>
-                                    
+                  <button v-on:click = "ordenarPorDescripcion">Ordenar por descripción </button>                
                   <button v-on:click = "agregarItem"> Agregar item</button> 
                   <input v-model="itemAgregado">
                   <input v-model="precioItem">
+                  <br>
+                  <br>
+                  <button v-on:click = "mostrarDatos"> Mostrar por consola </button>
 
                 
 
@@ -64,11 +67,15 @@
                      this.color = "color: blue;"
                  }, 
                  agregarItem(){
-                  /*  let precio = this.precioItem
-                   let item   = this.itemAgregado
-                   let itemAAgregar = {precio, item} */
-                   app.items.push({ precio: this.precioItem,  descripcion: this.itemAgregado.toUpperCase()})
+                  
+                   this.items.push({ precio: this.precioItem,  descripcion: this.itemAgregado.toUpperCase()})
                    
+                 },
+                 ordenarPorDescripcion() {
+                     this.items = this.items.sort( (a,b)=> ( a.descripcion.localeCompare(b.descripcion) ) )
+                 },
+                 mostrarDatos() {
+                     console.log(JSON.stringify(this.codigoFact), JSON.stringify(this.cliente), JSON.stringify(this.items))
                  }
              }
 
