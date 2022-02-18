@@ -15,7 +15,7 @@
             <button v-on:click="cambiarColor" >Cambiar color</button>
            
 
-            
+           
                   <p> Código de factura:  {{ codigoFact }} </p> 
                   
                   <p> Número de cliente:  {{cliente}}</p>  
@@ -76,6 +76,7 @@
                  },
                  mostrarDatos() {
                      console.log(JSON.stringify(this.codigoFact), JSON.stringify(this.cliente), JSON.stringify(this.items))
+                     //console.log(JSON.stringify(this.$data)) asi imprime toda la data
                  }
              }
 
