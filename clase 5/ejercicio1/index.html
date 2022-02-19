@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+
+    <div id="app" >
+        <div :style = "{ fontSize: postFontSize + 'em' }"> <!--Los : es la abreviacion de v-bind , aca decimos que el estilo aumente-->
+                 {{mensaje}}    
+        </div>
+        
+     
+     <br>
+        <!-- <input v-model="nuevoTamaño">  
+                 <button v-on:click ="ampliarTamanio"> Ampliar tamaño de título</button> -->
+         <!-- <button @click = "ampliarTamaño" >Ampliar tamaño de título</button>  el arroba reemplaza el v-on cuando se quiere hacer un evento-->
+            <!--     
+                 <button v-on:click ="reducirTamanio"> Reducir tamaño de título</button> -->
+
+    
+     <!--LLAMAMOS A 1 COMPONENTE -->
+     <name titulo = "primero"> </name>
+
+     <name titulo = "segundo"> </name>
+
+     <name titulo = "tercero"> </name>
+
+     <name num = 50 titulo = "cuarto"> </name>
+
+                
+      <!--ampliarTamanio es el nombre del method -->
+       <!--*** ampliar es el nombre que le damos al v-on y que coincide con el llamado en el componente en el $emit *** -->
+     <lista  titulo="Jugadores" v-on:ampliar="ampliarTamanio"  v-bind:jugadores= "[{ id: 3, nombre: 'Pepe' },
+                             { id: 9,  nombre: 'Juan' } ]" > 
+    </lista>
+
+
+    </div>
+
+    
+
+    <script>
+
+        //COMPONENTE
+        Vue.component( 'name', {
+            props: ['titulo', 'num'],                  // Se separa por coma igual que si fueran más de 1 parametro
+            template: `<div>
+                         <h2> {{ titulo }} </h2>
+                         <p> Texto </p>
+                         <p> {{ num }} </p> 
+                        </div>` 
+                    }
+        );          
+                          
+                         
+
+        //COMPONENTE CON ARRAY
+        Vue.component( 'lista', {
+            props: ['titulo' ,'jugadores'],                  
+            template: `<div>
+                            <h2>{{titulo}}</h2>
+
+                            <li v-for="jugador in jugadores">
+                                    {{ jugador.id }} {{jugador.nombre}} 
+                            </li>   
+
+                            <!-- *** ampliar es el nombre que le damos al v-on y que coincide con el llamado en el componente en el $emit *** -->
+                            <br>
+                            <button v-on:click = "$emit('ampliar')"> Ampliar tamaño de título</button> 
+                  
+                        </div>`    
+                        
+
+                       
+            }
+        );
+
+
+        //Para componentes el data se escribe de la siguiente forma, es como una función q retorna un objeto
+        var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                mensaje: 'hola mundo',
+                postFontSize: 2                 //Agregamos esta propriedad
+                //nuevoTamaño: 0                
+            }
+        }, 
+        methods : {
+            ampliarTamanio() {
+                    this.postFontSize ++
+                    console.log(this.postFontSize)
+
+                    
+            },
+            reducirTamanio(){
+                if(this.postFontSize <= 1) {
+                 alert('No se puede reducir más el tamaño')
+                } else {
+                    this.postFontSize --
+                    console.log(this.postFontSize)
+                }
+               
+            }
+            
+        }
+        })
+    </script>
+
+</body>
+</html>
