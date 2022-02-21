@@ -1,0 +1,14 @@
+.selector-for-some-widget {
+    box-sizing: content-box;
+  }
+
+.btn btn-primary {
+  margin: 10px;
+}
+
+.productoBuscado{
+  background-color: aqua;
+  text-align: center;
+  border-color: black;
+  color: black;
+}

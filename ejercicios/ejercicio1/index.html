@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+    <div id="app">
+        <h1 style="text-align: center;"> {{mensaje}} </h1>
+        <br>
+
+        <div>
+            <button v-on:click="ordenarPorDescripcion" type="button" class="btn btn-primary"> Ordenar por
+                descripcion</button>
+            <button v-on:click="ordenarPorPrecio" type="button" class="btn btn-primary"> Ordenar por precio</button>
+
+        </div>
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">DESCRIPCION</th>
+                    <th scope="col">PRECIO</th>
+                </tr>
+            </thead>
+            <tbody v-for="producto in productos">
+                <tr>
+                    <th scope="row">{{producto.id}}</th>
+                    <td>{{producto.descripcion}}</td>
+                    <td>{{producto.precio}}</td>
+
+                </tr>
+
+            </tbody>
+        </table>
+
+        <br>
+        <input v-model="productoIngresado">
+        <input v-model="precioIngresado">
+        <button v-on:click="agregarProducto" button type="button" class="btn btn-info"> Agregar producto</button>
+        <br>
+        <br>
+
+
+        <button v-on:click="mostrarProductos" button type="button" class="btn btn-info"> Mostrar en consola</button>
+        <br>
+        <br>
+
+        <input v-model="prodBuscado">
+        <button v-on:click="buscar" button type="button" class="btn btn-info"> Buscar</button>
+
+        <div v-if="seen">
+            <h3 class="productoBuscado">{{prodBuscado.descripcion + " $" + prodBuscado.precio}}</h3>
+            <button  v-on:click="modificarProducto" button type="button" class="btn btn-info"> Modificarproducto</button>
+            <button v-on:click="eliminarProducto" button type="button" class="btn btn-info"> Eliminar producto</button>
+            <br>
+            <br>
+
+            <div v-if="seen_modificarProducto">
+                <input v-model="nuevoNombreUpdate" >
+                <input v-model="nuevoPrecioUpdate" >
+                <button v-on:click="cambiar"> Cambiar </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+        var app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    mensaje: 'PRODUCTOS',
+                    productos: [
+                        { id: 1, descripcion: 'MOUSE', precio: 500 },
+                        { id: 2, descripcion: 'TECLADO', precio: 800 },
+                        { id: 3, descripcion: 'PARLANTE', precio: 900 },
+                        { id: 4, descripcion: 'AURICULARES', precio: 400 },
+                        { id: 5, descripcion: 'ROUTER', precio: 2000 }
+                    ],
+                    productoIngresado: 'producto',
+                    precioIngresado: 0,
+                    ultimoId: 6,
+                    prodBuscado: '',
+                    seen: false,
+                    seen_modificarProducto: false,
+                    nuevoNombreUpdate : '',
+                    nuevoPrecioUpdate : 0
+
+
+                }
+            },
+            methods: {
+                generarId() {
+                    return this.ultimoId++; //primero se evalua y dps incrementa
+                },
+
+                ordenarPorDescripcion() {
+                    this.productos = this.productos.sort((a, b) => (a.descripcion.localeCompare(b.descripcion)))
+                    console.log('ordeno por descripcion')
+                },
+
+                ordenarPorPrecio() {
+                    this.productos = this.productos.sort((a, b) => (a.precio - b.precio))
+
+                },
+
+                agregarProducto() {
+                    if (!this.buscarSiExisteProducto()) {
+                        if (this.validarPrecio()) {
+                            alert('Ingreso exitoso')
+                            this.productos.push({ id: this.generarId(), descripcion: this.productoIngresado.toUpperCase(), precio: this.precioIngresado })
+                        }
+                        else {
+                            alert('Debe ingresar un valor mayor a 0')
+                        }
+                    }
+                    else {
+                        alert('El producto ya existe')
+                    }
+                },
+
+                buscarSiExisteProducto() {
+                    let productoBuscado = this.productos.filter(x => x.descripcion == this.productoIngresado.toUpperCase())
+                    if (productoBuscado.length > 0) {
+                        return true
+                        console.log(productoBuscado)
+                    } else {
+                        return false
+                    }
+                },
+
+                buscar() {
+                    let productoBuscado = this.productos.filter(x => x.descripcion == this.prodBuscado.toUpperCase())
+                    
+                    if (productoBuscado.length > 0) {
+                        this.seen = true
+                        this.prodBuscado = productoBuscado[0]
+                        return productoBuscado[0]
+                    }
+                    else {
+                        this.seen = false
+                        this.prodBuscado = 'No existe ese producto'
+                        return null
+                    }
+
+                },
+
+                validarPrecio() {
+                    if (this.precioIngresado > 0) {
+                        return true
+                    }
+                    else {
+                        return false
+                    }
+                },
+
+                modificarProducto() {
+                    let indice = this.productos.indexOf(this.prodBuscado)
+                    console.log(indice)
+                    this.seen_modificarProducto = true
+
+                    this.nuevoNombreUpdate = this.prodBuscado.descripcion
+                    this.nuevoPrecioUpdate = this.prodBuscado.precio
+                    
+                },
+
+                cambiar() {
+                   let indice = this.productos.indexOf(this.prodBuscado)
+                    
+                   this.productos[indice].descripcion = this.nuevoNombreUpdate.toUpperCase()
+                   this.productos[indice].precio      = this.nuevoPrecioUpdate
+
+                   console.log(this.productos[indice].descripcion)
+              
+
+
+                    this.seen = false
+
+                },
+
+                eliminarProducto() {
+                    let indice = this.productos.indexOf(this.prodBuscado)
+                    this.productos.splice(indice, 1)
+                    alert(this.prodBuscado.descripcion + ' ha sido eliminado')
+                    this.seen = false
+                    this.prodBuscado = ' '
+                },
+
+                mostrarProductos() {
+                    console.log(JSON.stringify(this.productos))
+                }
+
+            }
+        })
+    </script>
+</body>
+
+</html>
